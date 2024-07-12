@@ -168,3 +168,5 @@ bld/
 mylocal_mongodata/
 
 devcerts/*
+
+Mango.Web/wwwroot/lib/*
