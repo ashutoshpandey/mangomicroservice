@@ -1,4 +1,4 @@
-﻿namespace Mango.Web.Models
+﻿namespace Contracts
 {
     public class ResponseDto
     {

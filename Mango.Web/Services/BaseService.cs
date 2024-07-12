@@ -1,4 +1,5 @@
-﻿using Mango.Web.Models;
+﻿using Contracts;
+using Mango.Web.Models.Dto;
 using Newtonsoft.Json;
 using System.Net;
 using static Mango.Web.Utility.Constant;
@@ -14,7 +15,7 @@ namespace Mango.Web.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ResponseDto> SendAsync(RequestDto requestDto)
+        public async Task<ResponseDto> SendAsync(WebRequestDto requestDto)
         {
             try
             {

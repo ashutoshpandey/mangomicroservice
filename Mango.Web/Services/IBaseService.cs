@@ -1,9 +1,10 @@
-﻿using Mango.Web.Models;
+﻿using Contracts;
+using Mango.Web.Models.Dto;
 
 namespace Mango.Web.Services
 {
     public interface IBaseService
     {
-        ResponseDto SendAsync(RequestDto requestDto);
+        Task<ResponseDto> SendAsync(WebRequestDto requestDto);
     }
 }
