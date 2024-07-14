@@ -109,9 +109,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 			return _response;
 		}
 
-
-
-
 		[HttpPost("CartUpsert")]
 		public async Task<ResponseDto> CartUpsert(CartDto cartDto)
 		{
@@ -165,8 +162,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 			}
 			return _response;
 		}
-
-
 
 		[HttpPost("RemoveCart")]
 		public async Task<ResponseDto> RemoveCart([FromBody] int cartDetailsId)
