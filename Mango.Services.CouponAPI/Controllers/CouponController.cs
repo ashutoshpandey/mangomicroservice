@@ -3,207 +3,150 @@ using Contracts;
 using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Models;
 using Mango.Services.CouponAPI.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
+    [Route("api/coupon")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class CouponController : ControllerBase
+    [Authorize]
+    public class CouponAPIController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        private ResponseDto _response;
         private IMapper _mapper;
-        private readonly AppDbContext _dbcontext;
-        
-        public CouponController(AppDbContext dbcontext, IMapper mapper)
+
+        public CouponAPIController(AppDbContext db, IMapper mapper)
         {
+            _db = db;
             _mapper = mapper;
-            _dbcontext = dbcontext;
+            _response = new ResponseDto();
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public IActionResult Get(int id)
+        public ResponseDto Get()
         {
             try
             {
-                Coupon coupon = _dbcontext.Coupons.First(c => c.CouponId == id);
-                if (coupon != null)
-                {
-                    return Ok(new ResponseDto()
-                    {
-                        IsSuccess = true,
-                        Result = _mapper.Map<Coupon>(coupon)
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                IEnumerable<Coupon> objList = _db.Coupons.ToList();
+                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Route("{id:int}")]
+        public ResponseDto Get(int id)
         {
             try
             {
-                var coupons = _dbcontext.Coupons.ToList();
-                return Ok(new ResponseDto()
-                {
-                    IsSuccess = true,
-                    Result = _mapper.Map<IEnumerable<CouponDto>>(coupons)
-                });
+                Coupon obj = _db.Coupons.First(u => u.CouponId == id);
+                _response.Result = _mapper.Map<CouponDto>(obj);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
 
         [HttpGet]
         [Route("GetByCode/{code}")]
-        public IActionResult GetByCode(string couponCode)
+        public ResponseDto GetByCode(string code)
         {
             try
             {
-                var coupon = _dbcontext.Coupons.First(c => c.CouponCode.ToLower() == couponCode.ToLower());
-                return Ok(new ResponseDto()
-                {
-                    IsSuccess = true,
-                    Result = _mapper.Map<CouponDto>(coupon)
-                });
+                Coupon obj = _db.Coupons.First(u => u.CouponCode.ToLower() == code.ToLower());
+                _response.Result = _mapper.Map<CouponDto>(obj);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CouponDto couponDto)
+        [Authorize(Roles = "ADMIN")]
+        public ResponseDto Post([FromBody] CouponDto couponDto)
         {
             try
             {
-                var coupon = _mapper.Map<Coupon>(couponDto);
-                _dbcontext.Coupons.Add(coupon);
-                _dbcontext.SaveChanges();
+                Coupon obj = _mapper.Map<Coupon>(couponDto);
+                _db.Coupons.Add(obj);
+                _db.SaveChanges();
 
-                return StatusCode(StatusCodes.Status201Created, new ResponseDto()
+                /*
+                var options = new Stripe.CouponCreateOptions
                 {
-                    IsSuccess = true,
-                    Result = _mapper.Map<CouponDto>(coupon)
-                });
+                    AmountOff = (long)(couponDto.Discount * 100),
+                    Name = couponDto.CouponCode,
+                    Currency = "usd",
+                    Id = couponDto.CouponCode,
+                };
+                var service = new Stripe.CouponService();
+                service.Create(options);
+                */
+
+                _response.Result = _mapper.Map<CouponDto>(obj);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
 
+
         [HttpPut]
-        [Route("{id}")]
-        public IActionResult Update(int id, [FromBody] CouponDto couponDto)
+        [Authorize(Roles = "ADMIN")]
+        public ResponseDto Put([FromBody] CouponDto couponDto)
         {
             try
             {
-                Coupon coupon = _dbcontext.Coupons.Find(id);
-                if (coupon != null)
-                {
+                Coupon obj = _mapper.Map<Coupon>(couponDto);
+                _db.Coupons.Update(obj);
+                _db.SaveChanges();
 
-                    _mapper.Map(couponDto, coupon);
-                    _dbcontext.Coupons.Update(coupon);
-                    _dbcontext.SaveChanges();
-
-                    return StatusCode(StatusCodes.Status200OK, new ResponseDto()
-                    {
-                        IsSuccess = true,
-                        Result = _mapper.Map<CouponDto>(coupon)
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                _response.Result = _mapper.Map<CouponDto>(obj);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public IActionResult Delete(int id)
+        [Route("{id:int}")]
+        [Authorize(Roles = "ADMIN")]
+        public ResponseDto Delete(int id)
         {
             try
             {
-                Coupon coupon = _dbcontext.Coupons.Find(id);
-                if (coupon != null)
-                {
-                    _dbcontext.Coupons.Remove(coupon);
-                    _dbcontext.SaveChanges();
+                Coupon obj = _db.Coupons.First(u => u.CouponId == id);
+                _db.Coupons.Remove(obj);
+                _db.SaveChanges();
 
-                    return StatusCode(StatusCodes.Status200OK, new ResponseDto()
-                    {
-                        IsSuccess = true,
-                        Result = _mapper.Map<CouponDto>(coupon)
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                //var service = new Stripe.CouponService();
+                //service.Delete(obj.CouponCode);
             }
             catch (Exception ex)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ResponseDto()
-                    {
-                        IsSuccess = false,
-                        Message = ex.Message
-                    }
-                );
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
             }
+            return _response;
         }
     }
 }
