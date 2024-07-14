@@ -1,14 +1,14 @@
 ﻿using Contracts;
 using Mango.Services.CouponAPI.Models.Dto;
 using Mango.Web.Models.Dto;
+using Mango.Web.Services;
 using Mango.Web.Utility;
 
-namespace Mango.Web.Services
+namespace Mango.Web.Service
 {
     public class CouponService : ICouponService
     {
         private readonly IBaseService _baseService;
-
         public CouponService(IBaseService baseService)
         {
             _baseService = baseService;
@@ -19,8 +19,8 @@ namespace Mango.Web.Services
             return await _baseService.SendAsync(new WebRequestDto()
             {
                 ApiType = Constant.ApiType.POST,
-                Url = Constant.CouponAPIBase + "/api/coupon",
-                Data = couponDto
+                Data = couponDto,
+                Url = Constant.CouponAPIBase + "/api/coupon"
             });
         }
 
@@ -65,8 +65,8 @@ namespace Mango.Web.Services
             return await _baseService.SendAsync(new WebRequestDto()
             {
                 ApiType = Constant.ApiType.PUT,
-                Url = Constant.CouponAPIBase + "/api/coupon/" + couponDto.CouponId,
-                Data = couponDto
+                Data = couponDto,
+                Url = Constant.CouponAPIBase + "/api/coupon"
             });
         }
     }

@@ -4,12 +4,11 @@ using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Models;
 using Mango.Services.CouponAPI.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
-using static Azure.Core.HttpHeader;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
-    [Route("api/[controller")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CouponController : ControllerBase
     {
         private IMapper _mapper;
@@ -22,7 +21,7 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -134,7 +133,7 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{id:id}")]
+        [Route("{id}")]
         public IActionResult Update(int id, [FromBody] CouponDto couponDto)
         {
             try
@@ -172,7 +171,7 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:id}")]
+        [Route("{id}")]
         public IActionResult Delete(int id)
         {
             try
