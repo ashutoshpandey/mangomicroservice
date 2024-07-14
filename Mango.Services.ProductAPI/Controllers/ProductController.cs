@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Contracts.Dto;
 using Contracts;
 using Mango.Services.ProductAPI.Data;
 using Mango.Services.ProductAPI.Models;
+using Mango.Services.ProductAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +10,13 @@ namespace Mango.Services.ProductAPI.Controllers
 {
     [Route("api/product")]
     [ApiController]
-    public class ProductAPIController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly AppDbContext _db;
         private ResponseDto _response;
         private IMapper _mapper;
 
-        public ProductAPIController(AppDbContext db, IMapper mapper)
+        public ProductController(AppDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
