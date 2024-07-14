@@ -16,7 +16,6 @@ namespace Mango.Services.ProductAPI.Extensions
 
             var key = Encoding.ASCII.GetBytes(secret);
 
-
             builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

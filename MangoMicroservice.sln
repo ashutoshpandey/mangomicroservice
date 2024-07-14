@@ -33,6 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Services.ProductAPI",
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Services.ShoppingCartAPI", "Mango.Services.ShoppingCartAPI\Mango.Services.ShoppingCartAPI.csproj", "{97326A70-E832-436E-9D16-9B25ECBC507E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EBDEA2B8-355C-4604-80F5-2CA60E6C5627} = {EBDEA2B8-355C-4604-80F5-2CA60E6C5627}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
