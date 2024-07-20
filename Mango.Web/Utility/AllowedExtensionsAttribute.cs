@@ -10,7 +10,7 @@ namespace Mango.Web.Utility
             _extensions = extensions;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var file = value as IFormFile;
 
@@ -25,5 +25,6 @@ namespace Mango.Web.Utility
 
             return ValidationResult.Success;
         }
+
     }
 }

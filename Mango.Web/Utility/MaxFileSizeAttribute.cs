@@ -25,5 +25,6 @@ namespace Mango.Web.Utility
 
             return ValidationResult.Success;
         }
+
     }
 }

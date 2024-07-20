@@ -4,7 +4,9 @@ using Mango.Services.ProductAPI.Data;
 using Mango.Services.ProductAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,6 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -46,7 +47,6 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-
 builder.AddAppAuthetication();
 
 builder.Services.AddAuthorization();
@@ -71,6 +71,7 @@ app.UseStaticFiles();
 app.MapControllers();
 ApplyMigration();
 app.Run();
+
 
 void ApplyMigration()
 {

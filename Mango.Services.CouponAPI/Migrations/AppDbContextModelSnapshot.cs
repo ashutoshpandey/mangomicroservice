@@ -16,7 +16,7 @@ namespace Mango.Services.CouponAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.0-preview.3.23174.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -33,10 +33,10 @@ namespace Mango.Services.CouponAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Discount")
+                    b.Property<double>("DiscountAmount")
                         .HasColumnType("float");
 
-                    b.Property<int>("MinimumAmount")
+                    b.Property<int>("MinAmount")
                         .HasColumnType("int");
 
                     b.HasKey("CouponId");

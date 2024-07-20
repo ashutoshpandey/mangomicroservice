@@ -1,9 +1,8 @@
-﻿using Contracts.Dto;
-using Contracts;
-using Mango.Web.Services;
+﻿using Mango.Web.Models;
+using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Mango.Web.Models.Dto;
+using System.Collections.Generic;
 
 namespace Mango.Web.Controllers
 {
@@ -12,18 +11,19 @@ namespace Mango.Web.Controllers
         private readonly IProductService _productService;
         public ProductController(IProductService productService)
         {
-            _productService = productService;
+            _productService=productService;
         }
+
 
         public async Task<IActionResult> ProductIndex()
         {
-            List<ProductDto> list = new();
+            List<ProductDto>? list = new();
 
-            ResponseDto response = await _productService.GetAllProductsAsync();
+            ResponseDto? response = await _productService.GetAllProductsAsync();
 
             if (response != null && response.IsSuccess)
             {
-                list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
+                list= JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
             }
             else
             {
@@ -43,7 +43,7 @@ namespace Mango.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                ResponseDto response = await _productService.CreateProductsAsync(model);
+                ResponseDto? response = await _productService.CreateProductsAsync(model);
 
                 if (response != null && response.IsSuccess)
                 {
@@ -60,13 +60,13 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> ProductDelete(int productId)
         {
-            ResponseDto response = await _productService.GetProductByIdAsync(productId);
+			ResponseDto? response = await _productService.GetProductByIdAsync(productId);
 
-            if (response != null && response.IsSuccess)
-            {
-                ProductDto? model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+			if (response != null && response.IsSuccess)
+			{
+                ProductDto? model= JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
                 return View(model);
-            }
+			}
             else
             {
                 TempData["error"] = response?.Message;
@@ -77,7 +77,7 @@ namespace Mango.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductDelete(ProductDto productDto)
         {
-            ResponseDto response = await _productService.DeleteProductsAsync(productDto.ProductId);
+            ResponseDto? response = await _productService.DeleteProductsAsync(productDto.ProductId);
 
             if (response != null && response.IsSuccess)
             {
@@ -93,11 +93,11 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> ProductEdit(int productId)
         {
-            ResponseDto response = await _productService.GetProductByIdAsync(productId);
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
 
             if (response != null && response.IsSuccess)
             {
-                ProductDto model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                ProductDto? model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
                 return View(model);
             }
             else
@@ -112,7 +112,7 @@ namespace Mango.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                ResponseDto response = await _productService.UpdateProductsAsync(productDto);
+                ResponseDto? response = await _productService.UpdateProductsAsync(productDto);
 
                 if (response != null && response.IsSuccess)
                 {
@@ -126,5 +126,6 @@ namespace Mango.Web.Controllers
             }
             return View(productDto);
         }
+
     }
 }
